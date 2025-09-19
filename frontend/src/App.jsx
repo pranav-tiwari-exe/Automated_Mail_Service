@@ -1,29 +1,55 @@
-import { useEffect, useState } from 'react'
+import { useEffect} from 'react'
 import axios from 'axios'
+import { useAppContext } from './context/AppContext'
+import LoginComponent from './components/LoginComponent.jsx'
+import NavBar from './components/NavBar.jsx'
 
 function App() {
-
-  const [data, setdata] = useState("hello")
+  const { isLogin, setIsLogin, baseBackendUrl, setError, setEmail, setName, setPicture } = useAppContext();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/').then((response) => {
-      setdata(response.data.message)
-      console.log(response.data)
-    }).catch((error) => {
-      console.error('Error fetching data:', error);
-    });
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status');
+    const message = params.get('message');
+
+    if (status === 'success') {
+      setError("");
+    }
+    else if (status === 'error') {
+      setIsLogin(false);
+      setError(message);
+    }
+    fetchUserData();
+    window.history.replaceState({}, '', window.location.pathname);
   }, [])
 
-  return (
-    <>
-      <a href="http://localhost:8000/login">
-        <button className="text-3xl font-bold underline text-blue-600 hover:text-blue-800">
-          Hello, Tailwind!
-        </button>
-      </a>
+  const fetchUserData = async () => {
+    await axios.get(`${baseBackendUrl}/user`, { withCredentials: true }).then((res) => {
+      setEmail(res.data.user.email);
+      setName(res.data.user.name);
+      setPicture(res.data.user.picture);
+      setIsLogin(true)
+    }).catch((err) => {
+      setError(err.message);
+    })
+  }
 
-      <h1 className="text-3xl font-bold underline text-blue-600 hover:text-blue-800">{data}</h1>
-    </>
+  const login = () => window.location.href = `${baseBackendUrl}/login`
+
+  return (
+    <div className="sm:mx-0 md:mx-10 lg:mx-20 xl:mx-40">
+      <NavBar/>
+      {(!isLogin) ? (
+        <div className='h-[80vh] flex justify-center items-center'>
+          <LoginComponent login={login}/>
+        </div>
+          
+        ) :
+        (
+          <></>
+        )}      
+
+    </div>
   )
 }
 

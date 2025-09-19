@@ -37,13 +37,13 @@ async def auth(request: Request):
     try:
         token = await oauth.google.authorize_access_token(request)
     except Exception as e:
-        return HTMLResponse(f'<h1>Authentication Error: {e}</h1>')
+        return RedirectResponse(url='http://localhost:5173/?status=error&message='+str(e))
     user = token.get('userinfo')
     if user:
         request.session['user'] = dict(user)
         request.session['token'] = token
-
-    return RedirectResponse(url='http://localhost:5173/')
+        
+    return RedirectResponse(url='http://localhost:5173/?status=success')
 
 
 @auth_router.get('/logout')
@@ -53,3 +53,14 @@ async def logout(request: Request):
     """
     request.session.pop('user', None)
     return RedirectResponse(url='http://localhost:5173/')
+
+
+@auth_router.get('/user')
+async def get_user(request: Request):
+    """
+    Returns the authenticated user's information.
+    """
+    user = request.session.get('user')
+    if user:
+        return {'user': user}
+    return {'user': None}

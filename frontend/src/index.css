@@ -1,4 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: white;
+  --secondary: #f0f4f9;
+  --text: black;
+  --shade1:#d1d1d1;
+  --shade2:#828486;
+}
+
+.dark {
+  --primary: rgb(17, 17, 18);
+  --secondary: ##282a2c;
+  --text:rgb(228, 228, 228);
+  --shade1:#413e3e;
+  --shade2:#b8b8b8;
+} 
+
+body {
+  background: var(--primary);
+  min-height: 100vh;
+  font-family: Outfit,Arial, Helvetica, sans-serif;
+  color: var(--text);
+}
