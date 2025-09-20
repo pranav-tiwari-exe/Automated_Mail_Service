@@ -51,7 +51,7 @@ async def logout(request: Request):
     """
     Clears the user's session data.
     """
-    request.session.pop('user', None)
+    request.session.clear()
     return RedirectResponse(url='http://localhost:5173/')
 
 

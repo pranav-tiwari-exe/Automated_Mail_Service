@@ -1,8 +1,11 @@
-import { useEffect} from 'react'
-import axios from 'axios'
+import { useEffect } from 'react'
 import { useAppContext } from './context/AppContext'
+import { ToastContainer } from 'react-toastify';
+import axios from 'axios'
+
 import LoginComponent from './components/LoginComponent.jsx'
 import NavBar from './components/NavBar.jsx'
+import Engine from './components/Engine.jsx';
 
 function App() {
   const { isLogin, setIsLogin, baseBackendUrl, setError, setEmail, setName, setPicture } = useAppContext();
@@ -25,12 +28,20 @@ function App() {
 
   const fetchUserData = async () => {
     await axios.get(`${baseBackendUrl}/user`, { withCredentials: true }).then((res) => {
-      setEmail(res.data.user.email);
-      setName(res.data.user.name);
-      setPicture(res.data.user.picture);
-      setIsLogin(true)
+      if (res.data.user) {
+        setIsLogin(true);
+        setEmail(res.data.user.email);
+        setName(res.data.user.name);
+        setPicture(res.data.user.picture);
+      } else {
+        setIsLogin(false);
+        setEmail(null);
+        setName(null);
+        setPicture(null);
+      }
     }).catch((err) => {
       setError(err.message);
+      console.error(err);
     })
   }
 
@@ -38,16 +49,17 @@ function App() {
 
   return (
     <div className="sm:mx-0 md:mx-10 lg:mx-20 xl:mx-40">
-      <NavBar/>
+      <NavBar />
+      <ToastContainer />
       {(!isLogin) ? (
-        <div className='h-[80vh] flex justify-center items-center'>
-          <LoginComponent login={login}/>
+        <div className='h-full flex justify-center items-center'>
+          <LoginComponent login={login} />
         </div>
-          
-        ) :
+
+      ) :
         (
-          <></>
-        )}      
+          <Engine/>
+        )}
 
     </div>
   )

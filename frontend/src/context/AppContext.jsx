@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 
 const AppContext = createContext(null);
 
@@ -9,13 +10,13 @@ const AppProvider = ({ children }) => {
     const [email, setEmail] = useState(null);
     const [name, setName] = useState(null);
     const [picture, setPicture] = useState(null);
-    const [theme, setTheme] = useState("light");
+    const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
     const baseBackendUrl = "http://localhost:8000";
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) setTheme(savedTheme);
-    }, []);
+        if (error) toast.error(error);
+        setError("")
+    }, [error])
 
     useEffect(() => {
         const root = window.document.documentElement;

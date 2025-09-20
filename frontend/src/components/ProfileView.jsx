@@ -9,7 +9,7 @@ const ProfileView = () => {
                 src={picture}
             />)}
             {name && email &&
-            (<div>
+            (<div className="hidden sm:flex flex-col overflow-hidden">
                 <h1 className="truncate text-sm font-semibold">
                     {name}
                 </h1>

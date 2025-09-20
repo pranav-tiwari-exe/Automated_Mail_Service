@@ -9,11 +9,14 @@
   --text: black;
   --shade1:#d1d1d1;
   --shade2:#828486;
+  --toastify-color-light: var(--shade1);
+  --toastify-font-family: Outfit,Arial, Helvetica, sans-serif;
+  --toastify-text-color-light: var(--text);
 }
 
 .dark {
   --primary: rgb(17, 17, 18);
-  --secondary: ##282a2c;
+  --secondary: #282a2c;
   --text:rgb(228, 228, 228);
   --shade1:#413e3e;
   --shade2:#b8b8b8;

@@ -2,9 +2,12 @@ import { useAppContext } from "../context/AppContext";
 
 const LogoutComponent = () => {
 
-    const { isLogin, setIsLogin, baseBackendUrl } = useAppContext();
+    const { isLogin, setIsLogin, baseBackendUrl,setEmail, setName, setPicture } = useAppContext();
     const logout = () =>{
         window.location.href = `${baseBackendUrl}/logout`
+        setEmail(null);
+        setName(null);
+        setPicture(null);
         setIsLogin(false);   
     }
 

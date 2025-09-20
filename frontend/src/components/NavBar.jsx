@@ -8,11 +8,11 @@ const NavBar = () => {
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
     return (
-        <div className="px-4 py-6 flex justify-between items-center rounded-lg">
+        <div className="px-4 py-6 mb-6 flex justify-between items-center rounded-lg">
             <ProfileView />
             <div className="flex items-center gap-4">
                 <LogoutComponent />
-                <button onClick={toggleTheme} className=" rounded-full p-3">
+                <button onClick={toggleTheme} className="w-14 rounded-full p-3">
                     <img src={(theme == "dark") ? assets.lightModeIcon : assets.darkModeIcon} alt="Toggle Theme" className="h-6 w-6" />
                 </button>
             </div>
