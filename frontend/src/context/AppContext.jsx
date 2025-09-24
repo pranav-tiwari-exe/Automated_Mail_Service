@@ -34,8 +34,8 @@ const AppProvider = ({ children }) => {
         email,
         setEmail,
         name,
-        picture,
         setName,
+        picture,
         setPicture,
         theme,
         setTheme
