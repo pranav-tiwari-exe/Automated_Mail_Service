@@ -5,7 +5,7 @@ const ProfileView = () => {
 
     return (
         <div className="flex w-full max-w-sm items-center gap-4 rounded-lg  ">
-            {picture &&(<img style={{ borderColor: "var(--shade1)" }} className="h-10 w-10 rounded-full border-2 object-cover"
+            {picture &&(<img style={{ borderColor: "var(--secondary)" }} className="h-10 w-10 rounded-full border-2 object-cover"
                 src={picture}
             />)}
             {name && email &&

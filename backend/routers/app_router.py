@@ -1,11 +1,11 @@
 from fastapi import (
     APIRouter, Request, UploadFile, File, Form,
-    HTTPException, status, BackgroundTasks
+    HTTPException,status
 )
 from googleapiclient.discovery import build
 from utils.extract_emails import read_csv_file, read_excel_file, extract_emails
 from utils.send_email import send_email
-from utils.o_auth_helper import get_credentials_from_session
+from utils.o_auth_helper import get_credentials_from_session,refresh_session_token
 
 router = APIRouter()
 
@@ -21,7 +21,6 @@ async def send_bulk_emails(service, email_list: set, subject: str, body: str, at
 @router.post("/api/initiate")
 async def initiate(
     request: Request,
-    background_tasks: BackgroundTasks,
     recipient_list: UploadFile = File(...),
     subject: str = Form(...),
     body: str = Form(...),
@@ -34,6 +33,13 @@ async def initiate(
 
     try:
         creds = get_credentials_from_session(session)
+        if creds and not creds.valid and creds.expired and creds.refresh_token:
+            try:
+                refresh_session_token(session, creds)
+                print("Token refreshed proactively in /user endpoint")
+            except Exception as e:
+                request.session.clear()
+                return {'user': None}
         service = build("gmail", "v1", credentials=creds)
     except Exception as e:
         raise HTTPException(status.HTTP_403_FORBIDDEN, f"Could not validate credentials: {e}")
@@ -59,6 +65,6 @@ async def initiate(
             content = await file.read()
             attachments_data.append({"filename": file.filename, "content": content})
 
-    background_tasks.add_task(send_bulk_emails, service, email_set, subject, body, attachments_data)
+    await send_bulk_emails(service, email_set, subject, body, attachments_data)
 
     return {"message": f"Campaign initiated. Emails are being sent to {len(email_set)} recipients in the background."}

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+@import 'prosemirror-view/style/prosemirror.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,19 +8,15 @@
   --primary: white;
   --secondary: #f0f4f9;
   --text: black;
-  --shade1:#d1d1d1;
-  --shade2:#828486;
-  --toastify-color-light: var(--shade1);
+  --toastify-color-light: var(--secondary);
   --toastify-font-family: Outfit,Arial, Helvetica, sans-serif;
   --toastify-text-color-light: var(--text);
 }
 
 .dark {
-  --primary: rgb(17, 17, 18);
+  --primary: #1b1c1d;
   --secondary: #282a2c;
   --text:rgb(228, 228, 228);
-  --shade1:#413e3e;
-  --shade2:#b8b8b8;
 } 
 
 body {
@@ -28,3 +25,125 @@ body {
   font-family: Outfit,Arial, Helvetica, sans-serif;
   color: var(--text);
 }
+
+.tiptap-toolbar button, .tiptap-toolbar select {
+  background: var(--secondary);
+  color: var(--text);
+  min-width:32px;
+  min-height:32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10%;
+  transition: all;
+  transition-duration:700ms;
+}
+
+.tiptap-toolbar .divider {
+  width: 2px;
+  height: 100;
+  background-color: rgb(59, 59, 59);
+  margin: 0 0.5rem;
+}
+
+.tiptap-toolbar button.is-active , .tiptap-toolbar select.is-active {
+  background: var(--text);
+  color: var(--secondary);
+}
+
+.tiptap-toolbar button:hover , .tiptap-toolbar select:hover {
+  background: var(--text);
+  color: var(--primary);
+}
+
+/* --- Editor Content Area (ProseMirror) --- */
+.ProseMirror{
+  padding:2vw;
+}
+
+.ProseMirror:hover{
+  background:rgba(170, 170, 169, 0.174);
+}
+
+.ProseMirror h1, .ProseMirror h2, .ProseMirror h3 {
+  margin-top: .5em;
+  margin-bottom: 0.3em;
+  line-height: 1.2;
+}
+
+.ProseMirror h1 {font-size: 48px;}
+.ProseMirror h2 {font-size: 36px;}
+.ProseMirror h3 {font-size: 24px;}
+
+.ProseMirror ul, .ProseMirror ol {
+  padding-left: 1.5rem;
+}
+.ProseMirror ul {
+  list-style-type: disc;
+}
+.ProseMirror ol {
+  list-style-type: decimal;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--text);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.ProseMirror pre {
+  background: #1b1c1d;
+  color: #f9fafb;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+}
+
+.ProseMirror code {
+  background-color: rgba(97, 97, 97, 0.1);
+  color: #ffffff;
+  padding: 0.1em 0.3em;
+  border-radius: 0.25em;
+  box-decoration-break: clone;
+}
+
+.ProseMirror a {
+  color: #3b82f6;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Tiptap Placeholder styles */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/*Scroll bar */
+.scrollable {
+  overflow: auto;
+  max-height: 300px;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--text) rgba(255, 255, 255, 0);
+}
+
+/* Chrome, Edge, Safari */
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollable::-webkit-scrollbar-track {
+  background: var(--text);
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+

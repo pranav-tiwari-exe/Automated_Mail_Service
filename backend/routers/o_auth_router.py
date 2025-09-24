@@ -1,10 +1,11 @@
 import os
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from starlette.config import Config
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from authlib.integrations.starlette_client import OAuth
 from utils.o_auth_helper import get_credentials_from_session,refresh_session_token
+from utils.database_operations import save_token,delete_token,get_token
 
 
 auth_router = APIRouter()
@@ -29,6 +30,18 @@ async def login(request: Request):
     return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline')
 
 
+@auth_router.get('/authentication_needed')
+async def re_login(request: Request):
+    """
+    Redirects the user to Google's authentication page.
+    """
+    user = request.session.get('user')
+    if user:
+        delete_token(user['email'])
+        request.session.clear()
+    redirect_uri = request.url_for('auth')
+    return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline',prompt='consent', include_granted_scopes='true')
+
 @auth_router.get('/auth')
 async def auth(request: Request):
     """
@@ -40,13 +53,18 @@ async def auth(request: Request):
     except Exception as e:
         return RedirectResponse(url=f'{config('FRONTEND_URL')}?status=error&message='+str(e))
     
-    request.session.clear()
     user = token.get('userinfo')
+    saved=0
     if user:
         request.session['user'] = dict(user)
         request.session['token'] = token
-        
-    return RedirectResponse(url=f"{config('FRONTEND_URL')}/?status=success")
+        if 'refresh_token' in token:
+                save_token( user['email'], token['refresh_token'])
+                saved=1
+        if get_token(user['email']) == None:
+            return RedirectResponse(url=f'{config('FRONTEND_URL')}?status=error&recovery_needed=1')
+
+    return RedirectResponse(url=f"{config('FRONTEND_URL')}?saved={saved}")
 
 
 @auth_router.get('/logout')
@@ -77,6 +95,7 @@ async def get_user(request: Request):
                 print("Token refreshed proactively in /user endpoint")
             except Exception as e:
                 request.session.clear()
-                return {'user': None}
-    
+                delete_token(user['email'])
+                return {'user': user, 'recovery_needed' : True}
+                    
     return {'user': user}

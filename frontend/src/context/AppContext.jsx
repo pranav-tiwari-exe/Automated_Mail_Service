@@ -6,16 +6,22 @@ const AppContext = createContext(null);
 const AppProvider = ({ children }) => {
 
     const [isLogin, setIsLogin] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState("");  
+    const [success, setSuccess] = useState("");
     const [email, setEmail] = useState(null);
     const [name, setName] = useState(null);
     const [picture, setPicture] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-    const baseBackendUrl = "http://localhost:8000";
+    const [isLoading,setIsLoading] = useState(false)
 
     useEffect(() => {
         if (error) toast.error(error);
         setError("")
+    }, [error])
+
+    useEffect(() => {
+        if (error) toast.success(success);
+        setSuccess("")
     }, [error])
 
     useEffect(() => {
@@ -28,9 +34,10 @@ const AppProvider = ({ children }) => {
     const value = {
         isLogin,
         setIsLogin,
-        baseBackendUrl,
         error,
         setError,
+        success,
+        setSuccess,
         email,
         setEmail,
         name,
@@ -38,7 +45,9 @@ const AppProvider = ({ children }) => {
         picture,
         setPicture,
         theme,
-        setTheme
+        setTheme,
+        isLoading,
+        setIsLoading
     }
 
     return (
