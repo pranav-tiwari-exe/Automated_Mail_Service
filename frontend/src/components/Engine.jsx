@@ -8,8 +8,8 @@ import MailForm from "./MailForm";
 import AttachmentIntake from "./AttachmentsIntake";
 
 const Engine = () => {
-    const { theme, setError, setIsLoading } = useAppContext();
-    const baseBackendUrl= import.meta.env.VITE_BACKEND_URL;
+    const { theme, setError, setIsLoading, setSuccess } = useAppContext();
+    const baseBackendUrl = import.meta.env.VITE_BACKEND_URL;
 
     //Deal with forms
     const [fileData, setFileData] = useState(null);
@@ -17,39 +17,44 @@ const Engine = () => {
     const [body, setBody] = useState("");
     const [attachments, setAttachments] = useState([]);
 
-    const submitForm = async(e) => {
+    const submitForm = async (e) => {
         setIsLoading(true);
         e.preventDefault();
 
-        if(fileData === null) {
+        if (fileData === null) {
             setError("Provide a file containing recepient mails !");
             return;
         }
-        if(subject === "") {
+        if (subject === "") {
             setError("Provide a Subject !");
             return;
         }
-        if(body === "") {
+        if (body === "") {
             setError("Provide the contents of a the mail !");
             return;
         }
 
-        const formdata= new FormData()
-        formdata.append('recipient_list',fileData)
-        formdata.append('subject',subject)
+        const formdata = new FormData()
+        formdata.append('recipient_list', fileData)
+        formdata.append('subject', subject)
         formdata.append('body', body)
-        if(attachments.length > 0){
-            attachments.forEach (file =>{
-                formdata.append('attachments' ,file)
+        if (attachments.length > 0) {
+            attachments.forEach(file => {
+                formdata.append('attachments', file)
             })
         }
 
-        await axios.post(`${baseBackendUrl}/api/initiate`,formdata, {withCredentials: true,})
-        .then(res =>{
-            console.log(res.data)
-        }).catch( error => {
-            setError(error.message)
-        })
+        await axios.post(`${baseBackendUrl}/api/initiate`, formdata, { withCredentials: true, })
+            .then(res => {
+                setIsLoading(false);
+                setSuccess(<div>
+                    Successfully Identified {res.data.emails_identified} E-mails
+                    <br />
+                    Will be Delivered Shortly
+                </div>)
+            }).catch(error => {
+                setError(error.message)
+            })
 
         setIsLoading(false);
     }

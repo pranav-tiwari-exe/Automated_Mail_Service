@@ -20,10 +20,10 @@ const AppProvider = ({ children }) => {
     }, [error])
 
     useEffect(() => {
-        if (error) toast.success(success);
+        if (success) toast.success(success);
         setSuccess("")
-    }, [error])
-
+    }, [success])
+ 
     useEffect(() => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');

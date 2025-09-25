@@ -31,7 +31,7 @@ function App() {
     }
     if (saved == 1){
       setIsLoading(false)
-      setSuccess("Reautorization Successful :/nLogin to continue")
+      setSuccess(<div>Reautorization Successful :<br/>Login to continue </div>)
       return
     }
 
@@ -71,7 +71,7 @@ function App() {
   const login = () => { window.location.href = `${baseBackendUrl}/login` };
 
   return (
-    <div className="sm:mx-0 md:mx-10 lg:mx-20 xl:mx-40">
+    <div className="sm:mx-0 md:mx-10 lg:mx-20 xl:mx-40 select-none">
       {isLoading && <Loading />}
       <NavBar />
       <ToastContainer />

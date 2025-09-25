@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
-@import 'prosemirror-view/style/prosemirror.css';
+@import 'prosemirror-view/style/prosemirror.css';   
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

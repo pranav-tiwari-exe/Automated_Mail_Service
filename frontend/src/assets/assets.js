@@ -9,6 +9,8 @@ import exchangeLight from './exchangeLight.png';
 import exchangeDark from './exchangeDark.png';
 import sendLight from './sendLight.png'
 import sendDark from './sendDark.png'
+import loadingLight from './loadingLight.svg'
+import loadingDark from './loadingDark.svg'
 
 export const assets= {
     google96x96,
@@ -21,5 +23,7 @@ export const assets= {
     exchangeLight,
     exchangeDark,
     sendDark,
-    sendLight
+    sendLight,
+    loadingDark,
+    loadingLight
 }

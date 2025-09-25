@@ -10,7 +10,7 @@ const CSVIntake = (props) => {
 
     return (
         <>
-            <label htmlFor="emailfileInput" className={`cursor-pointer rounded-lg border-2 m-6 sm:m-12 h-full border-dashed border-gray-300 p-6 flex flex-col hover:scale-105 transition duration-700 items-center justify-center ${hoverColor} transition-colors`}>
+            <label htmlFor="emailfileInput" className={`cursor-pointer rounded-lg border-2 m-6 sm:m-12 h-full border-dashed border-gray-500 p-6 flex flex-col hover:scale-105 transition duration-700 items-center justify-center ${hoverColor} transition-colors`}>
                 <input
                     id="emailfileInput"
                     onChange={e => props.setFileData(e.target.files[0])}

@@ -28,7 +28,7 @@ const AttachmentIntake = (props) => {
 
     return (
         <>
-            <label htmlFor="attachmentInput" className={`cursor-pointer rounded-lg border-2 m-6 sm:m-12 h-full border-dashed border-gray-300 p-6 flex flex-col hover:scale-105 transition duration-700 items-center justify-center ${hoverColor} transition-colors`}>
+            <label htmlFor="attachmentInput" className={`cursor-pointer rounded-lg border-2 m-6 sm:m-12 h-full border-dashed border-gray-500 p-6 flex flex-col hover:scale-105 transition duration-700 items-center justify-center ${hoverColor} transition-colors`}>
                 <input
                     id="attachmentInput"
                     onChange={e => props.setAttachments([...attachmentsArray,...e.target.files])}
