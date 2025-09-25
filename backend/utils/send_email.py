@@ -38,13 +38,8 @@ def send_email(
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
         create_message_body = {'raw': encoded_message}
 
-        sent_message = service.users().messages().send(
-            userId='me', body=create_message_body
-        ).execute()
-        
-        print(f"Email sent successfully to {to_address}!")
+        sent_message = service.users().messages().send(userId='me', body=create_message_body).execute()
         return sent_message
 
     except HttpError as error:
-        print(f"An error occurred while sending to {to_address}: {error}")
-        return None
+        raise error

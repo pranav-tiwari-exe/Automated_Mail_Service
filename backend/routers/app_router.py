@@ -9,14 +9,14 @@ from utils.o_auth_helper import get_credentials_from_session,refresh_session_tok
 
 router = APIRouter()
 
-async def send_bulk_emails(service, email_list: set, subject: str, body: str, attachments_data: list):
+async def send_bulk_emails(service, email_list: set, subject: str, body: str, attachments_data: list,):
     """This function runs in the background to send emails."""
     for email in email_list:
         send_email(
             service=service, to_address=email, subject=subject,
             html_body=body, attachments_data=attachments_data
         )
-    print(f"Background task finished for {len(email_list)} emails.")
+    
 
 @router.post("/api/initiate")
 async def initiate(
@@ -27,10 +27,8 @@ async def initiate(
     attachments: list[UploadFile] = File(default=None)
 ):
     session = request.session.get('token')
-    # print("TOKEN SCOPES:", session_token.get('scope'),  request.session.get('token') ) 
     if not session:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User not authenticated.")
-
     try:
         creds = get_credentials_from_session(session)
         if creds and not creds.valid and creds.expired and creds.refresh_token:
@@ -58,13 +56,15 @@ async def initiate(
     except Exception as e:
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, f"Error processing file: {e}")
 
-    # Pre-read attachments ONCE before the background task
-    attachments_data = []
-    if attachments:
-        for file in attachments:
-            content = await file.read()
-            attachments_data.append({"filename": file.filename, "content": content})
+    try:
+        attachments_data = []
+        if attachments:
+            for file in attachments:
+                content = await file.read()
+                attachments_data.append({"filename": file.filename, "content": content})
 
-    await send_bulk_emails(service, email_set, subject, body, attachments_data)
+        await send_bulk_emails(service, email_set, subject, body, attachments_data)
 
-    return {"message": f"Campaign initiated. Emails are being sent to {len(email_set)} recipients in the background."}
+        return {"emails_identified":len(email_set)}
+    except Exception as e:
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, f"Error Sending E-mails: {e}")

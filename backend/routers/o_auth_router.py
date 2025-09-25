@@ -43,7 +43,7 @@ async def re_login(request: Request):
     return await oauth.google.authorize_redirect(request, redirect_uri, access_type='offline',prompt='consent', include_granted_scopes='true')
 
 @auth_router.get('/auth')
-async def auth(request: Request):
+async def auth(request: Request):  
     """
     This is the callback endpoint that Google redirects to after a successful login.
     It exchanges the authorization code for an access token and user info.
